@@ -9,22 +9,22 @@ if( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && empty($_SESS
 }
 
 if($_SESSION['role'] != 1 ){
-  echo "<script>alert('Must be Admin Account..');window.location.href='login.php'</script>";
+  echo "<script>alert('Must be Admin Account..');window.location.href='login.php';</script>";
 }
 
-if (!empty($_POST)){
+if (!empty($_POST)) {
   $name = $_POST['name'];
   $email = $_POST['email'];
   $liveIn = $_POST['liveIn'];
   $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
-  // echo "$password";
   if (empty($_POST['role'])){
     $role = 0;
   }else{
     $role = 1;
   }
 
-  if( empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || !empty($_POST['password']) && strlen($_POST['password'])<4 || !empty($_POST['liveIn'])){
+  if ( empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || empty($_POST['liveIn']) || (!empty($_POST['password']) && (strlen($_POST['password'])<4)) ) {
+
     if (empty($_POST['name'])){
       $nameError = 'User name must not be empty. . .';
     }
@@ -35,27 +35,31 @@ if (!empty($_POST)){
       $passwordError = 'User password must not be empty. . .';
     }
 
-    if (!empty($_POST['password']) &&  strlen($_POST['password'])<4 ){
+    if (!empty($_POST['password']) &&  (strlen($_POST['password'])<4) ){
       $passwordError = 'User should use password character at least four.. . .';
     }
+
     if (empty($_POST['liveIn'])){
       $liveInError = 'Please insert your living address. . .';
     }
-  } else {
 
-    $pdo_stmt = $pdo->prepare(" SELECT * FROM users WHERE email=:email");
+  }else {
+    // echo " this is a time ";
+    $pdo_stmt = $pdo->prepare(" SELECT * FROM users WHERE email= :email");
     $pdo_stmt->execute(
       array(
         ':email' => $email
       )
     );
     $email_result = $pdo_stmt->fetchAll();
+    print"<pre>";
+    print_r($email_result);
 
     if ($email_result){
       echo "<script>alert('your email is duplicated. . . ');</script>";
-    }else{
+    }else {
 
-    $pdo_statement = $pdo->prepare(" INSERT INTO users (name,email,password,address,role) VALUES (:name, :email, :password,:address,:role) ");
+    $pdo_statement = $pdo->prepare(" INSERT INTO users(name,email,password,address,role) VALUES (:name,:email,:password,:address,:role) ");
     $pdo_statement->execute(
       array(
         ':name'=> $name,
@@ -65,10 +69,7 @@ if (!empty($_POST)){
         ':role' => $role
       )
     );
-
-
       echo "<script>alert('Successfully created. . . ');window.location.href='user_List.php';</script>";
-
     }
   }
 
@@ -138,7 +139,7 @@ include('header.php');
                  <div class="form-group ">
                      <div class="form-check" style="padding-left:0px !important;">
                        <input type="checkbox" class="" name="role" >
-                       <label class="form-check-label" for=""> <b>Create Admin Account</b> </label>
+                       <label class="form-check-label" for=""> Create Admin Account </label>
                      </div>
                  </div>
                </div>
