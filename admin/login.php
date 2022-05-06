@@ -6,7 +6,7 @@ session_start();
 
   if(!empty($_POST)){
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = $_POST['password']  ;
     // $role = '1';
     $pdostatement = $pdo->prepare( " SELECT * FROM  users WHERE email=:email AND role=:role");
     $pdostatement->bindValue(':email',$email);
