@@ -34,7 +34,7 @@ if (!empty($_POST['search'])){
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Product Lists</h3>
+                <h3 class="card-title">User Lists</h3>
               </div>
               <!-- /.card-header -->
 

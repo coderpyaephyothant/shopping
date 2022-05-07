@@ -1,6 +1,7 @@
 <?php
 	session_start();
-	require 'config/common.php'; 
+	require 'config/common.php';
+	
  ?>
 
 <!DOCTYPE html>
