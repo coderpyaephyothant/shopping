@@ -5,9 +5,11 @@
 if( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && empty($_SESSION['user_name'])){
   echo "<script>window.location.href='login.php'</script>";
 }
-
-if (!empty($_POST['search'])){
-  setcookie('search', $_POST['search'], time() + (86400 * 30), "/"); // 86400 = 1 day
+// print"<pre>";
+// print_r($_SESSION) ;
+if (!empty($_POST['search']) ){
+  setcookie('search', $_POST['search'] , time() + (86400 * 30), "/");
+  // 86400 = 1 day
 }else{
   if(empty($_GET['pagenumber'])){
     unset($_COOKIE['search']);
@@ -87,10 +89,29 @@ if(empty($_POST['search']) && empty($_COOKIE['search']) ){
 							$pdo_categories->execute();
 							$catefories_result = $pdo_categories->fetchAll();
 							// print"<pre>";
-							// print_r($catefories_result);exit();
+							// print_r($catefories_result);
+              // $number_products = 0;
 							if ($catefories_result){
-								foreach ($catefories_result as  $value) {?>
-									<a href="index.php?id=<?php echo $value['id'] ?>"><?php echo escape($value['name']) ?></a>
+								foreach ($catefories_result as  $value) {
+                  // print"<pre>";
+                  // print_r($product_cat_result);
+                  // echo $product_cat_result['name'];
+                  $product_id = $value['id'];
+                  $pdo_products_cat = $pdo->prepare(" SELECT * FROM products WHERE category_id=$product_id ");
+                  $pdo_products_cat->execute();
+                  $product_cat_result = $pdo_products_cat->fetchAll();
+                  // print"<pre>";
+                  // print_r($product_cat_result);
+                  if ($product_cat_result){
+                    ?>
+                      <a href="index.php?id=<?php echo $value['id'] ?>"><?php echo escape($value['name']) ?><span style="color:green; opacity:0.7;"> &nbsp; (<?php echo   count($product_cat_result); ?>)</span> </a>
+                    <!-- // print"<pre>";
+                    // print_r($product_cat_result[0]['quantity']); -->
+                    <?php
+                    // $number_products ++;
+                  }
+                  ?>
+<!-- <br> <br> -->
 							<?php
 						}
 							}
@@ -131,7 +152,7 @@ if(empty($_POST['search']) && empty($_COOKIE['search']) ){
 									<div class="col-lg-4 col-md-6">
 										<div class="single-product">
                       <a href="product_detail.php?id=<?php echo $value['id'] ?>">
-											<img class="img-fluid" src="admin/images/<?php echo escape($value['image']) ?>" alt="" style="width:250px; height:330px";>
+											<img class="img-fluid" src="admin/images/<?php echo escape($value['image']) ?>" alt="" style="width:250px; height:350px";>
                       </a>
                       <div class="product-details">
 												<h6><?php echo escape($value['name']) ?></h6>
@@ -139,11 +160,6 @@ if(empty($_POST['search']) && empty($_COOKIE['search']) ){
 													<h6><?php echo escape($value['price'].'MMK') ?></h6>
 												</div>
 												<div class="prd-bottom">
-
-													<a href="" class="social-info">
-														<span class="ti-bag"></span>
-														<p class="hover-text">add to bag</p>
-													</a>
 													<a href="product_detail.php?id=<?php echo $value['id'] ?>" class="social-info">
 														<span class="lnr lnr-move"></span>
 														<p class="hover-text">view more</p>
