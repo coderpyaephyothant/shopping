@@ -34,7 +34,13 @@ if (!empty($_POST['search'])){
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
+                <div class="btn-group" style="float:right !important;">
+                  <div class="container">
+                    <a href="order_list.php" class="btn btn-primary">  < Back  </a>
+                  </div>
+                </div>
                 <h3 class="card-title">Order Details</h3>
+
               </div>
               <!-- /.card-header -->
               <?php
@@ -72,9 +78,10 @@ if (!empty($_POST['search'])){
                       <th >#</th>
                       <th>Product</th>
                       <th>Quantity</th>
+                      <th>Price</th>
                       <th>Order Date : (date.month.year)</th>
                       <th>Image</th>
-                      <th>Actions</th>
+
                     </tr>
                   </thead>
                   <tbody>
@@ -94,17 +101,13 @@ if (!empty($_POST['search'])){
                         <td> <?php echo $id ?></td>
                         <td><?php echo $name_result[0]['name'] ?></td>
                         <td><?php echo $value['quantity'] ?></td>
+                        <td>
+                          <?php echo $name_result[0]['price'] ?></td>
                         <td><?php  echo date("d-m-Y", strtotime($value['ordered_date']) );?></td>
-                        <td>
-                          <img src="images/<?php echo $name_result[0]['image'] ?>" alt="" width="250">
+                        <td style="text-align: center;">
+                          <img src="images/<?php echo $name_result[0]['image'] ?>" alt="" width="80">
                         </td>
-                        <td>
-                          <div class="btn-group">
-                            <div class="container">
-                              <a href="order_list.php?id=<?php echo $value['id'] ?>" class="btn btn-info">  < Back  </a>
-                            </div>
-                          </div>
-                        </td>
+
                       </tr>
                       <?php
                       $id ++;

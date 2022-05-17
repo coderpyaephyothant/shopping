@@ -17,6 +17,7 @@ require 'config/config.php';
                                 <th scope="col">Price</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Total</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,8 +40,8 @@ require 'config/config.php';
                                   <tr>
                                       <td>
                                           <div class="media">
-                                              <div class="d-flex">
-                                                  <img src="admin/images/<?php echo escape($result_session_products['image']); ?>" alt="" width="190" height="250">
+                                              <div class="d-flex" style="width:100px; height:80px; background-size:cover;">
+                                                  <img src="admin/images/<?php echo escape($result_session_products['image']); ?>" alt="" width="100%" height="100%">
                                               </div>
                                               <div class="media-body">
                                                   <b><?php echo escape($result_session_products['name']); ?></b>
@@ -59,6 +60,12 @@ require 'config/config.php';
                                       </td>
                                       <td>
                                           <h5><?php echo escape($total_each); ?></h5>
+                                      </td>
+                                      <td>
+                                        <a href="clear_item.php?cat_id=<?php echo escape($result_session_products['id']); ?>"
+                                          class="btn btn-success"
+                                            onclick="return confirm('Are you sure you want to delete this item?')"
+                                          >Delete</a>
                                       </td>
                                   </tr>
                               <?php

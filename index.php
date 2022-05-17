@@ -1,12 +1,16 @@
 
 <?php
- include('header.php') ?>
+ include('header.php');
+ // require 'config/config.php';
+  ?>
 <?php
 if( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && empty($_SESSION['user_name'])){
   echo "<script>window.location.href='login.php'</script>";
 }
 // print"<pre>";
 // print_r($_SESSION) ;
+
+//for search cookie
 if (!empty($_POST['search']) ){
   setcookie('search', $_POST['search'] , time() + (86400 * 30), "/");
   // 86400 = 1 day
@@ -16,7 +20,20 @@ if (!empty($_POST['search']) ){
     setcookie('search', null, -1, '/');
   }
 }
-	require 'config/config.php';
+//for select cat cookie
+if (!empty($_GET['id']) ){
+  setcookie('id', $_GET['id'] , time() + (86400 * 30), "/");
+  // 86400 = 1 day
+}else{
+  if(empty($_GET['pagenumber'])){
+    unset($_COOKIE['id']);
+    setcookie('id', null, -1, '/');
+  }
+}
+
+
+require 'config/config.php';
+
 if(!empty($_GET['pagenumber'])){
 		$pagenumber = $_GET['pagenumber'];
 
@@ -29,53 +46,46 @@ $offset = ($pagenumber - 1) * $numberOfRecords;
 
 if(empty($_POST['search']) && empty($_COOKIE['search']) ){
 
-  if (!empty($_GET['id'])){
-    $id = $_GET['id'];
-    // $pdo_products_by_id = $pdo->prepare(" SELECT * FROM products WHERE category_id=".$_GET['id']);
-    // $pdo_products_by_id->execute();
-    // $pdo_result = $pdo_products_by_id->fetchAll();
-    // print"<pre>";
-    // print_r($pdo_result);exit();
-    $pdo_statement = $pdo->prepare( " SELECT * FROM products WHERE category_id=$id ORDER BY id DESC " );
+  if (!empty($_GET['id'])  || !empty($_COOKIE['id'])){
+
+    $selectKey = !empty($_GET['id']) ? $_GET['id'] : $_COOKIE['id'];
+
+    $pdo_statement = $pdo->prepare( " SELECT * FROM products WHERE category_id LIKE '%$selectKey%' AND quantity >0  ORDER BY id DESC " );
     $pdo_statement->execute();
     $raw_product_result = $pdo_statement->fetchAll();
-    // print"<pre>";
-    // print_r($raw_product_result);exit();
 
    	$totalpages = ceil( count($raw_product_result)/$numberOfRecords ) ;
 
-   	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE category_id=$id ORDER BY id DESC LIMIT $offset,$numberOfRecords  ");
+   	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE category_id LIKE '%$selectKey%' AND quantity >0   ORDER BY id DESC LIMIT $offset,$numberOfRecords  ");
    	$pdo_stmt->execute();
    	$product_result= $pdo_stmt->fetchAll();
+    // print"<pre>";
+    // print_r($raw_product_result);
   }else{
-    $pdo_statement = $pdo->prepare( " SELECT * FROM products  ORDER BY id DESC " );
+    $pdo_statement = $pdo->prepare( " SELECT * FROM products WHERE quantity >0   ORDER BY id DESC " );
     $pdo_statement->execute();
     $raw_product_result = $pdo_statement->fetchAll();
 
-
    	$totalpages = ceil( count($raw_product_result)/$numberOfRecords ) ;
 
-   	$pdo_stmt = $pdo->prepare("  SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numberOfRecords  ");
+   	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE quantity >0 ORDER BY id DESC LIMIT $offset,$numberOfRecords  ");
    	$pdo_stmt->execute();
    	$product_result= $pdo_stmt->fetchAll();
   }
 } else {
 	$searchKey = !empty($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
-	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE name LIKE '%$searchKey%' ORDER BY id DESC  ");
+	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE name LIKE '%$searchKey%' AND quantity >0  ORDER BY id DESC  ");
 	$pdo_stmt->execute();
 	$raw_product_result = $pdo_stmt->fetchAll();
   // print"<pre>";
   // print_r($raw_product_result);exit();
 	$totalpages = ceil( count($raw_product_result)/$numberOfRecords ) ;
 
-	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE name LIKE '%$searchKey%'  ORDER BY id DESC LIMIT $offset,$numberOfRecords  ");
+	$pdo_stmt = $pdo->prepare("  SELECT * FROM products WHERE name LIKE '%$searchKey%' AND quantity >0 ORDER BY id DESC LIMIT $offset,$numberOfRecords  ");
 	$pdo_stmt->execute();
 	$product_result = $pdo_stmt->fetchAll();
 }
-
 ?>
-
-
 
 <div class="container">
 	<div class="row">
@@ -88,31 +98,27 @@ if(empty($_POST['search']) && empty($_COOKIE['search']) ){
 							$pdo_categories = $pdo->prepare(" SELECT * FROM categories ORDER BY id DESC ");
 							$pdo_categories->execute();
 							$catefories_result = $pdo_categories->fetchAll();
-							// print"<pre>";
-							// print_r($catefories_result);
+
+
               // $number_products = 0;
 							if ($catefories_result){
+
 								foreach ($catefories_result as  $value) {
+
+                  $cat_number =$value['id'];
+                  $pdo_category_number = $pdo->prepare(" SELECT * FROM products WHERE category_id=$cat_number ");
+                  $pdo_category_number->execute();
+                  $pdo_number_result=$pdo_category_number->fetchAll();
                   // print"<pre>";
-                  // print_r($product_cat_result);
-                  // echo $product_cat_result['name'];
-                  $product_id = $value['id'];
-                  $pdo_products_cat = $pdo->prepare(" SELECT * FROM products WHERE category_id=$product_id ");
-                  $pdo_products_cat->execute();
-                  $product_cat_result = $pdo_products_cat->fetchAll();
-                  // print"<pre>";
-                  // print_r($product_cat_result);
-                  if ($product_cat_result){
-                    ?>
-                      <a href="index.php?id=<?php echo $value['id'] ?>"><?php echo escape($value['name']) ?><span style="color:green; opacity:0.7;"> &nbsp; (<?php echo   count($product_cat_result); ?>)</span> </a>
-                    <!-- // print"<pre>";
-                    // print_r($product_cat_result[0]['quantity']); -->
-                    <?php
-                    // $number_products ++;
-                  }
+    							// print_r($pdo_number_result);
+
                   ?>
-<!-- <br> <br> -->
+
+
+                  <a href="index.php?id=<?php echo $value['id'] ?>"><?php echo escape($value['name']) ?><span style="color:green; opacity:0.7;"> &nbsp;[&nbsp;<?php echo count($pdo_number_result); ?>&nbsp;]</a>
+
 							<?php
+
 						}
 							}
 						 ?>
@@ -152,18 +158,29 @@ if(empty($_POST['search']) && empty($_COOKIE['search']) ){
 									<div class="col-lg-4 col-md-6">
 										<div class="single-product">
                       <a href="product_detail.php?id=<?php echo $value['id'] ?>">
-											<img class="img-fluid" src="admin/images/<?php echo escape($value['image']) ?>" alt="" style="width:250px; height:350px";>
+											<img class="img-fluid" src="admin/images/<?php echo escape($value['image']) ?>" alt="" style="width:100px; height:150px;";>
                       </a>
                       <div class="product-details">
-												<h6><?php echo escape($value['name']) ?></h6>
+                        <b><p><?php echo escape($value['name']) ?></p></b>
 												<div class="price">
-													<h6><?php echo escape($value['price'].'MMK') ?></h6>
+													<p><?php echo escape($value['price'].'MMK') ?></p>
 												</div>
 												<div class="prd-bottom">
-													<a href="product_detail.php?id=<?php echo $value['id'] ?>" class="social-info">
-														<span class="lnr lnr-move"></span>
-														<p class="hover-text">view more</p>
-													</a>
+                          <form class="" action="add_to_cart.php" method="post">
+                            <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
+                            <input type="hidden" name="id" value="<?php echo escape($value['id']); ?>">
+                            <input type="hidden" name="qty" value="1">
+                            <div href="#" class="social-info"  >
+                              <button type="submit" name="button" style="border:0px !important; background:none;">
+                                <span style="right:5px;" class="ti-bag"></span>
+                                <p class="hover-text" style="left:25px !important;">Add to Cart</p></button>
+                            </div>
+
+  													<a  href="product_detail.php?id=<?php echo $value['id'] ?>" class="social-info">
+  														<span class="lnr lnr-move"></span>
+  														<p class="hover-text">view more</p>
+  													</a>
+                          </form>
 												</div>
 											</div>
 										</div>

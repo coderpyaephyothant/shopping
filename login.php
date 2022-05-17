@@ -31,6 +31,7 @@ require 'config/config.php';
 			if ($email_checked_result){
 				if (password_verify($password,$email_checked_result['password'])){
 					$_SESSION['user_name'] = $email_checked_result['name'];
+					$_SESSION['user_id'] = $email_checked_result['id'];
 					$_SESSION['role'] = $email_checked_result['role'];
 					$_SESSION['logged_in'] = time();
 					header('Location:index.php');
@@ -106,8 +107,8 @@ require 'config/config.php';
 				<div class="col-first">
 					<h1>Login/Register</h1>
 					<nav class="d-flex align-items-center">
-						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-						<a href="category.html">Login/Register</a>
+						<a href="">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="">Login/Register</a>
 					</nav>
 				</div>
 			</div>

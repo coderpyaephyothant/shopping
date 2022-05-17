@@ -97,7 +97,7 @@ if (!empty($_POST['search'])){
                         <td>
                           <div class="btn-group">
                             <div class="container">
-                              <a href="order_detail.php?sale_order_id=<?php echo $value['id'] ?>" class="btn btn-primary">  > details  </a>
+                              <a href="order_detail.php?sale_order_id=<?php echo $value['id'] ?>" class="btn btn-primary">  > Details  </a>
                             </div>
                           </div>
                         </td>

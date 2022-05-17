@@ -20,7 +20,7 @@ if (!empty($_POST)){
     }else{
       $_SESSION['cart']['id'.$id] = $quantity;
     }
-    header('Location:product_detail.php?id='.$id);
+    header('Location:cart.php');
 
   }
 }

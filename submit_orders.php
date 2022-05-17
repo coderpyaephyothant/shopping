@@ -1,3 +1,79 @@
+
+
+<?php
+
+session_start();
+require 'config/config.php';
+require 'config/common.php';
+
+$user_id = $_SESSION['user_id'];
+$total_price =0;
+	if (!empty($_SESSION['cart'])){
+		// sessionCart foreact Loop -----
+		foreach ($_SESSION['cart'] as $key => $quantity) {
+
+			$keyId = str_replace('id','',$key);
+			$pdo_cart_products = $pdo->prepare(" SELECT * FROM products WHERE id=$keyId ");
+			$pdo_cart_products->execute();
+			$result_session_products = $pdo_cart_products->fetch(PDO::FETCH_ASSOC);
+			// print"<pre>";
+		  // print_r($result_session_products);
+			$total_each = $result_session_products['price'] * $quantity;
+			// echo $total_each;
+			$total_price += $total_each;
+			// echo $total_price;
+		}
+
+		// add to sale order table & sale order_details mysql_list_tables
+
+		// add to sale_order_table...
+		$pdo_add_sale_order_table = $pdo->prepare(" INSERT INTO sale_order (customer_id,total_price,ordered_date) VALUES (:cid,:tp,:od) ");
+		$result_add_sale_order_table = $pdo_add_sale_order_table -> execute(
+			array (
+				':cid' => $user_id,
+				':tp' => $total_price,
+				':od'=> date('Y-m-d H:i:s')
+			)
+		);
+				if ($result_add_sale_order_table ) {
+					$s_o_d =$pdo->LastInsertId();
+
+					foreach ($_SESSION['cart'] as $key => $quantity) {
+						$keyId = str_replace('id','',$key);
+						$pdo_add_sale_details_table = $pdo->prepare(" INSERT INTO sale_order_details (sale_order_id,product_id,quantity) VALUES (:sod,:pid,:qty) ");
+						$result_add_sale_details_table = $pdo_add_sale_details_table->execute(
+							array(
+								':sod' => $s_o_d,
+								':pid' => $keyId,
+								':qty' => $quantity
+							)
+						);
+
+						//product and its quantity database // update
+						$pdo_product_database_quantity = $pdo->prepare(" SELECT * FROM products WHERE id=$keyId ");
+						$pdo_product_database_quantity->execute();
+						$pdo_result_database_quantity = $pdo_product_database_quantity->fetch(PDO::FETCH_ASSOC);
+
+						$real_quantity_data = $pdo_result_database_quantity['quantity'] - $quantity;
+
+						$pdo_finish_quantity = $pdo->prepare(" UPDATE products SET quantity=:qty WHERE id=$keyId  ");
+						$result_finished = $pdo_finish_quantity->execute(
+							array(
+								':qty' => $real_quantity_data
+							)
+						);
+
+						unset($_SESSION['cart']);
+					}
+
+			// add to sale _order_details table----
+
+
+		}
+
+};
+
+?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 
@@ -15,7 +91,7 @@
 	<!-- meta character set -->
 	<meta charset="UTF-8">
 	<!-- Site Title -->
-	<title>Karma Shop</title>
+	<title>Piae Thant Shop</title>
 
 	<!--
 		CSS
@@ -38,7 +114,7 @@
 			<nav class="navbar navbar-expand-lg navbar-light main_box">
 				<div class="container">
 					<!-- Brand and toggle get grouped for better mobile display -->
-					<a class="navbar-brand logo_h" href="index.html"><h4>AP Shopping<h4></a>
+					<a class="navbar-brand logo_h" href="index.php"><h4>AP Shopping<h4></a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="icon-bar"></span>
@@ -76,7 +152,7 @@
 				<div class="col-first">
 					<h1>Confirmation</h1>
 					<nav class="d-flex align-items-center">
-						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="index.php">Home<span class="lnr lnr-arrow-right"></span></a>
 					</nav>
 				</div>
 			</div>
@@ -87,9 +163,9 @@
 	<!--================Order Details Area =================-->
 	<section class="order_details section_gap">
 		<div class="container">
-			<h3 class="title_confirmation">Thank you. Your order has been received.</h3>
+			<h3 class="title_confirmation">Thank you. Your orders has been received.</h3>
 			<div class="row order_d_inner">
-				<div class="col-lg-6">
+				<div class="col-lg-12">
 					<div class="details_item">
 						<h4>Order Info</h4>
 						<ul class="list">
@@ -100,17 +176,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-lg-6">
-					<div class="details_item">
-						<h4>Shipping Address</h4>
-						<ul class="list">
-							<li><a href="#"><span>Street</span> : 56/8</a></li>
-							<li><a href="#"><span>City</span> : Los Angeles</a></li>
-							<li><a href="#"><span>Country</span> : United States</a></li>
-							<li><a href="#"><span>Postcode </span> : 36952</a></li>
-						</ul>
-					</div>
-				</div>
+
 			</div>
 		</div>
 	</section>
