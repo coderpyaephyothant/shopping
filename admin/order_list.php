@@ -72,7 +72,7 @@ if (!empty($_POST['search'])){
                       <th >#</th>
                       <th>Customers' Name</th>
                       <th>Total Price</th>
-                      <th>Order Date : (date.month.year)</th>
+                      <th>Ordered Date : (D-M-Y)</th>
                       <th>Actions</th>
                     </tr>
                   </thead>

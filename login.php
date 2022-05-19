@@ -85,7 +85,7 @@ require 'config/config.php';
 			<nav class="navbar navbar-expand-lg navbar-light main_box">
 				<div class="container">
 					<!-- Brand and toggle get grouped for better mobile display -->
-					<a class="navbar-brand logo_h" href="index.html" style="padding-bottom:0rem !important;"><h4>Pyae Phyo Thant's Shopping Project<h4></a>
+					<a class="navbar-brand logo_h" href="index.php" style="padding-bottom:0rem !important;"><h4>Pyae Phyo Thant's Shopping Project<h4></a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
 					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="icon-bar"></span>
@@ -120,8 +120,18 @@ require 'config/config.php';
 	<section class="login_box_area section_gap">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-12">
-					<div class="login_form_inner" style="padding-top: 20px !important;padding-bottom: 20px !important;">
+				<div class="col-lg-6">
+					<div class="login_box_img">
+						<img class="img-fluid" src="img/login.jpg" alt="">
+						<div class="hover">
+							<h4>Hi..New to our shopping website?</h4>
+							<p>Please Create Account to start shopping.</p>
+							<a class="primary-btn" href="register.php">Create an Account</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="login_form_inner" style="">
 						<h3 style="text-transform:none !important;">Login Form </h3>
 
 

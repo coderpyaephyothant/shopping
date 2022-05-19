@@ -96,8 +96,8 @@
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-					<h1>Piae Thant Shopping site</h1>
-
+					<h1>Welcome <?php echo $_SESSION['user_name'] ?></h1>
+					<a href="logout.php" style="padding:5px;background:#fff;border-radius:10%; color:#645A58;float:right !important;">Logout</a>
 				</div>
 			</div>
 		</div>

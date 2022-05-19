@@ -1,6 +1,8 @@
 <?php include('header.php');
 require 'config/config.php';
-
+if( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && empty($_SESSION['user_name'])){
+  echo "<script>window.location.href='login.php'</script>";
+}
 
 if(!empty($_GET['id'])){
   $id = $_GET['id'];

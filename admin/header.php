@@ -145,6 +145,42 @@ action="user_List.php"
             </a>
           </li>
 
+          <li class="nav-item has-treeview ">
+            <a href="#" class="nav-link active" style="background:#36cb75!important;">
+              <i class="fa fa-star"></i>
+              <p>
+                Sale Reports
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="weekly_report.php" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Weekly Reporting</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="monthly_report.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Monthly Reporting</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="premium.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Premium Customers</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="best_seller.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Best Seller Items</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
 
         </ul>
       </nav>

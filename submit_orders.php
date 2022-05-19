@@ -5,6 +5,9 @@
 session_start();
 require 'config/config.php';
 require 'config/common.php';
+if( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) && empty($_SESSION['user_name'])){
+  echo "<script>window.location.href='login.php'</script>";
+}
 
 $user_id = $_SESSION['user_id'];
 $total_price =0;

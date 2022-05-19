@@ -78,7 +78,7 @@ if (!empty($_POST['search'])){
               ?>
 
               <div class="card-body">
-                <a href="product_create.php" class="btn btn-primary">Create Product</a> <br> <br>
+                <a href="product_create.php" class="btn btn-primary" style="background:#36cb75 !important;border:0px !important;">Create Product</a> <br> <br>
                 <table class="table table-bordered">
                   <thead>
                     <tr>

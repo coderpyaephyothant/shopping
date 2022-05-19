@@ -176,6 +176,7 @@ require 'config/config.php';
 
 							<div class="col-md-12 form-group">
 								<button type="submit" value="submit" class="primary-btn">Register</button>
+								<a href="login.php"><button type="button" name="button" class="primary-btn">Back</button></a>
 							</div>
 
 						</form>

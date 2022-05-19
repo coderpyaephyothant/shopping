@@ -11,12 +11,12 @@ if($_SESSION['role'] != 1 ){
   echo "<script>alert('Must be Admin Account..');window.location.href='login.php'</script>";
 }
 
-if (!empty($_POST['search'])){
-  setcookie('search', $_POST['search'], time() + (86400 * 30), "/"); // 86400 = 1 day
+if (!empty($_GET['sale_order_id'])){
+  setcookie('sale_order_id', $_GET['sale_order_id'], time() + (86400 * 30), "/"); // 86400 = 1 day
 }else{
   if(empty($_GET['pagenumber'])){
-    unset($_COOKIE['search']);
-    setcookie('search', null, -1, '/');
+    unset($_COOKIE['sale_order_id']);
+    setcookie('sale_order_id', null, -1, '/');
   }
 }
  ?>
@@ -52,20 +52,39 @@ if (!empty($_POST['search'])){
                 $pagenumber = 1;
               }
 
-              $numberOfRecords = 2;
+              $numberOfRecords = 3;
               $offset = ($pagenumber - 1) * $numberOfRecords;
 
-
+              // i solved pagination problem within 10 minutes.....haha..easy!
+              if (!empty($_GET['sale_order_id'])){
+                $sale_id = $_GET['sale_order_id'];
+                // echo $sale_id;
                 //for select users from database-------
-               $pdo_statement = $pdo->prepare( " SELECT * FROM sale_order_details  WHERE sale_order_id=".$_GET['sale_order_id'] );
+               $pdo_statement = $pdo->prepare( " SELECT * FROM sale_order_details  WHERE sale_order_id=$sale_id");
                $pdo_statement->execute();
                $raw_ordered_details_result = $pdo_statement->fetchAll();
+               // print"<pre>";
+               // print_r($raw_ordered_details_result);exit();
 
                 $totalpages = ceil( count($raw_ordered_details_result)/$numberOfRecords ) ;
 
-                $pdo_stmt = $pdo->prepare("  SELECT * FROM sale_order_details WHERE sale_order_id=".$_GET['sale_order_id']."  LIMIT  $offset,$numberOfRecords "  );
+                $pdo_stmt = $pdo->prepare("  SELECT * FROM sale_order_details WHERE sale_order_id=$sale_id  LIMIT  $offset,$numberOfRecords "  );
                 $pdo_stmt->execute();
                 $ordered_details_result= $pdo_stmt->fetchAll();
+              }else{
+                $s_key = !empty($_GET['sale_order_id']) ? $_GET['sale_order_id'] : $_COOKIE['sale_order_id'];
+                $pdo_statement = $pdo->prepare( " SELECT * FROM sale_order_details  WHERE sale_order_id LIKE '%$s_key%' ORDER BY id DESC ");
+                $pdo_statement->execute();
+                $raw_ordered_details_result = $pdo_statement->fetchAll();
+                // print"<pre>";
+                // print_r($raw_ordered_details_result);exit();
+
+                 $totalpages = ceil( count($raw_ordered_details_result)/$numberOfRecords ) ;
+
+                 $pdo_stmt = $pdo->prepare("  SELECT * FROM sale_order_details WHERE sale_order_id LIKE '%$s_key%' ORDER BY id DESC LIMIT  $offset,$numberOfRecords "  );
+                 $pdo_stmt->execute();
+                 $ordered_details_result= $pdo_stmt->fetchAll();
+              }
                 // print"<pre>";
                 // print_r($ordered_details_result);exit();
 
