@@ -11,6 +11,7 @@ if($_SESSION['role'] != 1 ){
   echo "<script>alert('Must be Admin Account..');window.location.href='login.php'</script>";
 }
 
+
  ?>
  <?php
  include('header.php');
@@ -23,29 +24,19 @@ if($_SESSION['role'] != 1 ){
           <div class="col-md-12">
             <div class="card">
               <div  class="card-header">
-                <h3  class="card-title">Weekly Reports</h3>
+                <h3  class="card-title">Premium Customers - Above 500k</h3>
               </div>
               <!-- /.card-header -->
               <?php
-              $today_date = date('Y-m-d');
-              $start_date= date('Y-m-d',strtotime($today_date.'+1 day'));
-              $end_date =  date('Y-m-d',strtotime($start_date.'-7 day'));
-              // echo " $today_date $start_date  $end_date" ;
-              $pdo_sale_order = $pdo->prepare("SELECT * FROM sale_order WHERE ordered_date<:s_date AND ordered_date>=:e_date");
+              $premium_price = 500000;
+              $pdo_sale_order = $pdo->prepare("SELECT * FROM sale_order WHERE total_price >= :t_price ORDER BY id");
               $pdo_sale_order->execute(
                 array(
-                  ':s_date'=>$start_date,
-                  ':e_date'=>$end_date
+                  ':t_price'=>$premium_price
                 )
               );
               $result1 = $pdo_sale_order->fetchAll();
-              // $userId = $result1['customer_id'];
-              // $pdo_user = $pdo->prepare("SELECT * FROM users WHERE id=$userId");
-              // $pdo_user->execute();
-              // $result_user = $pdo_user->fetch(PDO::FETCH_ASSOC);
-              // print"<pre>";
-              // print_r($result1);
-              // SELECT CUSTOMER //
+
               // print"<pre>";
               // print_r($result1); // sale_order result
               // print_r($result_user['name']); // name result
@@ -56,9 +47,9 @@ if($_SESSION['role'] != 1 ){
                   <thead>
                     <tr>
                       <th >#</th>
-                      <th>Customer Name</th>
+                      <th>Premium Customer Name</th>
                       <th>Total Price</th>
-                      <th >Ordered Date (D-M-Y)</th>
+                      <th >Ordered Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -75,7 +66,7 @@ if($_SESSION['role'] != 1 ){
                         <td><?php echo escape($i) ?></td>
                         <td><?php echo escape($result_user['name']) ?></td>
                         <td><?php echo escape($value['total_price']) ?></td>
-                        <td><?php echo escape(date('d-m-Y',strtotime($value['ordered_date']))) ?></td>
+                        <td><?php echo escape(date('Y-m-d',strtotime($value['ordered_date']))) ?></td>
                       </tr>
                   <?php
                   $i ++;

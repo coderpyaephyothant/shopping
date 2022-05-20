@@ -43,7 +43,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
  ?>
 
  <?php
-if($linkAddress !== 'order_list.php' && $linkAddress !== 'order_detail.php'){
+if($linkAddress !== 'order_list.php' && $linkAddress !== 'order_detail.php'&& $linkAddress !== 'weekly_report.php'&& $linkAddress !== 'monthly_report.php' && $linkAddress !== 'premium.php' && $linkAddress !== 'best_seller.php'){
 ?>
 <form class="form-inline ml-3" method="post"
 <?php if ($linkAddress == 'index.php'): ?>
@@ -145,8 +145,8 @@ action="user_List.php"
             </a>
           </li>
 
-          <li class="nav-item has-treeview ">
-            <a href="#" class="nav-link active" style="background:#36cb75!important;">
+          <li class="nav-item has-treeview menu ">
+            <a href="#" class="nav-link " >
               <i class="fa fa-star"></i>
               <p>
                 Sale Reports

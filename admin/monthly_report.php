@@ -11,14 +11,7 @@ if($_SESSION['role'] != 1 ){
   echo "<script>alert('Must be Admin Account..');window.location.href='login.php'</script>";
 }
 
-if (!empty($_POST['search'])){
-  setcookie('search', $_POST['search'], time() + (86400 * 30), "/"); // 86400 = 1 day
-}else{
-  if(empty($_GET['pagenumber'])){
-    unset($_COOKIE['search']);
-    setcookie('search', null, -1, '/');
-  }
-}
+
  ?>
  <?php
  include('header.php');
